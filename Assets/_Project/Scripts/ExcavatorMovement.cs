@@ -18,9 +18,6 @@ public class ExcavatorMovement : MonoBehaviour
     public float brakeTime = 0.8f;
     public float rotationSmoothing = 8f;
 
-    [Header("Animacion de Orugas (auto-detectadas)")]
-    public float trackScrollSpeed = 2f;
-    public float wheelRotationSpeed = 360f;
 
     // Componentes
     private Rigidbody rb;
@@ -34,12 +31,6 @@ public class ExcavatorMovement : MonoBehaviour
     // Velocidades de cada oruga
     private float leftTrackSpeed;
     private float rightTrackSpeed;
-
-    // Auto-detectados
-    private Renderer trackRenderer;
-    private Material trackMaterial;
-    private Transform[] wheelTransforms;
-    private float trackOffset;
 
     void Awake()
     {
@@ -87,39 +78,13 @@ public class ExcavatorMovement : MonoBehaviour
 
     void Start()
     {
-        AutoDetectParts();
     }
 
-    private void AutoDetectParts()
-    {
-        Transform root = GetExcavatorRoot();
-
-        // Buscar el renderer de orugas/tracks (Wheel)
-        Transform wheel = FindChildRecursive(root, "Wheel");
-        if (wheel != null)
-        {
-            trackRenderer = wheel.GetComponent<Renderer>();
-            if (trackRenderer != null)
-            {
-                trackMaterial = trackRenderer.material; // crea instancia
-                Debug.Log("[ExcavatorMovement] Track encontrado: " + wheel.name);
-            }
-        }
-
-        // Buscar Inside_Wheels y sus hijos como ruedas para animar
-        Transform insideWheels = FindChildRecursive(root, "Inside_Wheels");
-        if (insideWheels != null)
-        {
-            wheelTransforms = insideWheels.GetComponentsInChildren<Transform>();
-            Debug.Log("[ExcavatorMovement] Ruedas encontradas: " + wheelTransforms.Length);
-        }
-    }
 
     void Update()
     {
         ReadInput();
         CalculateTrackSpeeds();
-        AnimateTracks();
     }
 
     void FixedUpdate()
@@ -186,28 +151,6 @@ public class ExcavatorMovement : MonoBehaviour
         rb.MoveRotation(nuevaRotacion);
     }
 
-    private void AnimateTracks()
-    {
-        float avgSpeed = (leftTrackSpeed + rightTrackSpeed) * 0.5f;
-
-        // Scroll UV de las orugas
-        if (trackMaterial != null)
-        {
-            trackOffset += avgSpeed * trackScrollSpeed * Time.deltaTime;
-            trackMaterial.mainTextureOffset = new Vector2(trackOffset, 0f);
-        }
-
-        // Girar ruedas visualmente
-        if (wheelTransforms != null)
-        {
-            float rotAmount = avgSpeed * wheelRotationSpeed * Time.deltaTime;
-            foreach (Transform w in wheelTransforms)
-            {
-                if (w != null && w != transform && w != rb.transform)
-                    w.Rotate(Vector3.right, rotAmount, Space.Self);
-            }
-        }
-    }
 
     private Transform GetExcavatorRoot()
     {
@@ -235,10 +178,6 @@ public class ExcavatorMovement : MonoBehaviour
         return null;
     }
 
-    void OnDestroy()
-    {
-        if (trackMaterial != null) Destroy(trackMaterial);
-    }
 
     public float GetLeftTrackSpeed() => leftTrackSpeed;
     public float GetRightTrackSpeed() => rightTrackSpeed;
