@@ -22,6 +22,10 @@ public class ExcavatorMovement : MonoBehaviour
     // Componentes
     private Rigidbody rb;
 
+    // El Bull Dozer 2 tiene el FBX rotado: su frente es el eje X local (right).
+    // El Excavator Pack tiene rotacion identity: su frente es el eje Z (forward).
+    private bool useRightAsForward;
+
     // Inputs suavizados
     private float currentSpeed;
     private float currentRotation;
@@ -64,15 +68,26 @@ public class ExcavatorMovement : MonoBehaviour
         rb.linearDamping = 2f;
         rb.angularDamping = 5f;
 
+        // Detectar eje de avance segun el modelo
+        useRightAsForward = IsRootBullDozer(root);
+
         // Asegurar que el root tenga collider
         if (root.GetComponentInChildren<Collider>() == null)
         {
             BoxCollider col = root.gameObject.AddComponent<BoxCollider>();
             Bounds bounds = new Bounds(root.position, Vector3.zero);
-            foreach (Renderer r in root.GetComponentsInChildren<Renderer>())
-                bounds.Encapsulate(r.bounds);
-            col.center = root.InverseTransformPoint(bounds.center);
-            col.size = bounds.size;
+            Renderer[] renderers = root.GetComponentsInChildren<Renderer>();
+            if (renderers.Length > 0)
+            {
+                foreach (Renderer r in renderers)
+                    bounds.Encapsulate(r.bounds);
+                col.center = root.InverseTransformPoint(bounds.center);
+                col.size = bounds.size;
+            }
+            else
+            {
+                col.size = new Vector3(2, 2, 4);
+            }
         }
     }
 
@@ -133,9 +148,9 @@ public class ExcavatorMovement : MonoBehaviour
     private void ApplyMovement()
     {
         float forwardSpeed = (leftTrackSpeed + rightTrackSpeed) * 0.5f;
-        // El frente del modelo apunta en el eje X (flecha roja) del root Rigidbody
-        Vector3 movimiento = rb.transform.right * forwardSpeed * maxSpeed * Time.fixedDeltaTime;
-        rb.MovePosition(rb.position + movimiento);
+        // Bull Dozer 2 usa X (right); Excavator Pack usa Z (forward)
+        Vector3 dir = useRightAsForward ? rb.transform.right : rb.transform.forward;
+        rb.MovePosition(rb.position + dir * forwardSpeed * maxSpeed * Time.fixedDeltaTime);
     }
 
     private void ApplyRotation()
@@ -158,13 +173,24 @@ public class ExcavatorMovement : MonoBehaviour
         Transform bestRoot = transform;
         while (current != null)
         {
-            if (current.name.Contains("Bull Dozer") || current.name.Contains("Excavator") || current.GetComponent<Rigidbody>() != null)
+            if (current.name.Contains("Bull Dozer") ||
+                current.name.Contains("Excavator") ||
+                current.name.Contains("Caterpillar") ||
+                current.GetComponent<Rigidbody>() != null)
             {
                 bestRoot = current;
             }
             current = current.parent;
         }
         return bestRoot;
+    }
+
+    /// <summary>Devuelve true si el root es el modelo Bull Dozer 2 (frente en eje X).</summary>
+    private bool IsRootBullDozer(Transform root)
+    {
+        foreach (Transform child in root)
+            if (child.name == "Body.003" || child.name == "Main_Forks") return true;
+        return false;
     }
 
     private Transform FindChildRecursive(Transform parent, string name)
