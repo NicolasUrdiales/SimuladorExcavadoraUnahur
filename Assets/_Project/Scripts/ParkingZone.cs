@@ -23,6 +23,25 @@ public class ParkingZone : MonoBehaviour
         {
             collidersInside.Add(other);
             UpdateUI();
+
+            // Disable controls to stop the player from driving
+            movement.enabled = false;
+
+            // Find and disable the arm controls as well
+            ExcavatorArm arm = movement.GetComponentInChildren<ExcavatorArm>() ?? movement.GetComponentInParent<ExcavatorArm>();
+            if (arm != null)
+            {
+                arm.enabled = false;
+            }
+
+            // Freeze the physics of the excavator to stop it immediately
+            Rigidbody rb = movement.GetComponent<Rigidbody>() ?? movement.GetComponentInParent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = true;
+            }
         }
     }
 
