@@ -19,17 +19,17 @@ namespace Excavator.Engine
             this.torqueAtNormalizedRpm = torqueAtNormalizedRpm ?? (_ => 1f);
         }
 
-            public void reset()
+        public void Reset()
         {
             CurrentRpm = 0f;
         }
 
         public void ForceRpm(float rpm) => CurrentRpm = Clamp(rpm, 0f, maxRpm);
 
-        public void Step(float throttle01, float load1, float  dt)
+        public void Step(float throttle01, float load01, float dt)
         {
             throttle01 = Clamp01(throttle01);
-            load1 = Clamp01(load1);
+            load01     = Clamp01(load01);
 
             float targetRpm = idleRpm + (maxRpm - idleRpm) * throttle01;
             float normalizedRpm = Clamp01((CurrentRpm - idleRpm) / (maxRpm - idleRpm));
@@ -38,7 +38,7 @@ namespace Excavator.Engine
 
 
 
-            float effectiveRate = baseResponseRate * Math.Max(availableTorque, 0.05f) * (1f - load1 * 0.85f);
+            float effectiveRate = baseResponseRate * Math.Max(availableTorque, 0.05f) * (1f - load01 * 0.85f);
 
 
             float alpha = 1f - (float)Math.Exp(-effectiveRate * dt);
