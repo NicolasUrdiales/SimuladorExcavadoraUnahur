@@ -1500,6 +1500,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8920615321687851043, guid: ac1c85fa749fc2a4e93e3966791418d4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 636763529}
+    - targetCorrespondingSourceObject: {fileID: 8920615321687851043, guid: ac1c85fa749fc2a4e93e3966791418d4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 636763540}
+    - targetCorrespondingSourceObject: {fileID: 8920615321687851043, guid: ac1c85fa749fc2a4e93e3966791418d4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 636763539}
     - targetCorrespondingSourceObject: {fileID: 3736623205553331755, guid: ac1c85fa749fc2a4e93e3966791418d4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 304079169}
@@ -1679,6 +1685,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Excavator.Engine.KeyboardIgnitionInput
   contactKey: 17
   startKey: 23
+--- !u!114 &636763539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34699381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59a7161903d46044084e7b8afdd99335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimulatorReportManager
+  operatorName: "Juan P\xE9rez"
+  operatorId: OP-2026-884
+  penaltyTracker: {fileID: 636763540}
+  parkingZone: {fileID: 189366797}
+  engineController: {fileID: 636763532}
+  openReportKey: 114
+--- !u!114 &636763540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34699381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3080abfd62e42b44a85ae4be0cf52803, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PenaltyTracker
+  initialScore: 100
+  minVelocityThreshold: 0.25
+  severeVelocityThreshold: 1.5
+  collisionCooldownSeconds: 1.2
+  pointsDeductionBarrier: 15
+  pointsDeductionChannelizer: 5
+  pointsDeductionGroundSlam: 10
+  pointsDeductionStructure: 10
+  pointsDeductionSevereBonus: 10
+  showLiveHud: 1
+  hudX: 16
+  hudY: 16
+  hudWidth: 240
+  hudHeight: 65
 --- !u!1001 &639383521
 PrefabInstance:
   m_ObjectHideFlags: 0
