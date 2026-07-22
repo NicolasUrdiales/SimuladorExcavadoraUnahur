@@ -182,12 +182,19 @@ public class ParkingZone : MonoBehaviour
                 Collider col = bucketTrans.GetComponent<Collider>()
                             ?? bucketTrans.GetComponentInChildren<Collider>();
 
-                if (col != null)
+                if (col != null && col.enabled)
                 {
-                    // El borde inferior del collider debe estar cerca del suelo (Y=0)
-                    float bottomY = col.bounds.min.y;
-                    // Rango: hasta 0.30m sobre el suelo o 0.25m de penetracion
-                    shovelOnGround = bottomY <= 0.30f && bottomY >= -0.25f;
+                    try
+                    {
+                        // El borde inferior del collider debe estar cerca del suelo (Y=0)
+                        float bottomY = col.bounds.min.y;
+                        // Rango: hasta 0.30m sobre el suelo o 0.25m de penetracion
+                        shovelOnGround = bottomY <= 0.30f && bottomY >= -0.25f;
+                    }
+                    catch
+                    {
+                        shovelOnGround = bucketTrans.position.y <= 0.45f;
+                    }
                 }
                 else
                 {
@@ -301,7 +308,12 @@ public class ParkingZone : MonoBehaviour
         {
             Transform bt  = _arm.BucketTransform;
             Collider  col = bt.GetComponent<Collider>() ?? bt.GetComponentInChildren<Collider>();
-            float     alt = col != null ? col.bounds.min.y : bt.position.y;
+            float alt = bt.position.y;
+            try
+            {
+                if (col != null && col.enabled) alt = col.bounds.min.y;
+            }
+            catch { alt = bt.position.y; }
             armExtra = _condArm
                 ? $" (alt: {alt:F2}m ✓)"
                 : $" (alt: {alt:F2}m — bajar con F/G/H)";

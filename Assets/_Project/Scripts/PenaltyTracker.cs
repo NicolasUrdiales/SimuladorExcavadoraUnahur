@@ -169,17 +169,23 @@ public class PenaltyTracker : MonoBehaviour
         string severity = "Media";
         int baseDeduction = pointsDeductionStructure;
 
-        if (nameLower.Contains("barrier") || nameLower.Contains("block") || nameLower.Contains("vintprog") || nameLower.Contains("pedestrian"))
+        if (nameLower.Contains("barrier") || nameLower.Contains("block") || nameLower.Contains("vintprog") || nameLower.Contains("pedestrian") || nameLower.Contains("plastic"))
         {
-            category = "Barrera de Seguridad Rígida";
+            category = "Barrera de Seguridad / Valla de Obra";
             baseDeduction = pointsDeductionBarrier;
             severity = "Grave";
         }
-        else if (nameLower.Contains("channelizing") || nameLower.Contains("cone") || nameLower.Contains("canalizador"))
+        else if (nameLower.Contains("channelizing") || nameLower.Contains("cone") || nameLower.Contains("canalizador") || nameLower.Contains("traffic"))
         {
             category = "Canalizador / Señalización Vial";
             baseDeduction = pointsDeductionChannelizer;
             severity = "Leve";
+        }
+        else if (nameLower.Contains("building") || nameLower.Contains("tower") || nameLower.Contains("structure") || nameLower.Contains("scaffolding") || nameLower.Contains("pipe"))
+        {
+            category = "Estructura de Edificación / Obra";
+            baseDeduction = pointsDeductionStructure;
+            severity = "Grave";
         }
         else if (nameLower.Contains("plane") || nameLower.Contains("terrain") || nameLower.Contains("ground"))
         {

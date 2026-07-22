@@ -1702,7 +1702,7 @@ MonoBehaviour:
   penaltyTracker: {fileID: 636763540}
   parkingZone: {fileID: 189366797}
   engineController: {fileID: 636763532}
-  openReportKey: 114
+  reportKey: 30
 --- !u!114 &636763540
 MonoBehaviour:
   m_ObjectHideFlags: 0
